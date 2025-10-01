@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ project.name }} - SQL Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <h1>SQL Result for {{ project.name }}</h1>
+    <a class="back" href="{{ url_for('project_view', pid=project.id) }}">← Back to Project</a>
+    <pre>{{ sql }}</pre>
+
+    {% if results %}
+        {% for r in results %}
+            {% if r.rows %}
+                <h4>Statement: {{ r.statement }}</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            {% for col in r.rows[0].keys() %}
+                            <th>{{ col }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in r.rows %}
+                        <tr>
+                            {% for col in row.keys() %}
+                            <td>{{ row[col] }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>{{ r.statement }} executed successfully (no rows returned).</p>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <p>No results.</p>
+    {% endif %}
+</div>
+</body>
+</html>

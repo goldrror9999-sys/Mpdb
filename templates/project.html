@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MPDB - {{ project.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <h1>Project: {{ project.name }}</h1>
+    <a class="back" href="{{ url_for('dashboard') }}">← Back to Dashboard</a>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, msg in messages %}
+        <div class="flash {{ category }}">{{ msg }}</div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="project-actions">
+        <form method="POST" action="{{ url_for('generate_jumbo', pid=project.id) }}">
+            <button type="submit">Generate Jumbo API Key</button>
+        </form>
+    </div>
+
+    <div class="tables-list">
+        <h3>Tables</h3>
+        {% if tables %}
+            <ul>
+                {% for t in tables %}
+                <li><a href="{{ url_for('project_table_view', pid=project.id, table_name=t) }}">{{ t }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No tables yet.</p>
+        {% endif %}
+    </div>
+
+    <div class="sql-execute">
+        <h3>Run SQL</h3>
+        <form method="POST" action="{{ url_for('project_execute', pid=project.id) }}">
+            <textarea name="sql" placeholder="Write your SQL here..." required></textarea>
+            <button type="submit">Execute</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

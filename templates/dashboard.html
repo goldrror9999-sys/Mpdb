@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MPDB Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <h1>MPDB Dashboard</h1>
+    <a class="logout" href="{{ url_for('logout') }}">Logout</a>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, msg in messages %}
+        <div class="flash {{ category }}">{{ msg }}</div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="create-project">
+        <h3>Create New Project</h3>
+        <form method="POST" action="{{ url_for('create_project') }}">
+            <input type="text" name="name" placeholder="Project Name" required>
+            <input type="password" name="password" placeholder="Project Password" required>
+            <select name="privacy">
+                <option value="Private">Private</option>
+                <option value="Publish">Publish</option>
+            </select>
+            <button type="submit">Create Project</button>
+        </form>
+    </div>
+
+    <div class="project-list">
+        <h3>Projects</h3>
+        {% if projects %}
+            <ul>
+                {% for p in projects %}
+                <li>
+                    <a href="{{ url_for('project_view', pid=p['id']) }}">{{ p['name'] }}</a>
+                    - {{ p['privacy'] }}
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No projects yet.</p>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>
